@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node run.js",
     "lint": "eslint .",
-    "build": "echo 'No build step defined'"
+    "build": "echo 'No build step defined'",
+    "docs:build": "node scripts/generateDocs.js"
   },
   "dependencies": {
     "cheerio": "^1.1.0",
