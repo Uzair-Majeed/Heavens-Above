@@ -27,7 +27,8 @@ function getTable(config) {
     let database = config.database || [];
     let counter = config.counter || 0;
     const opt = config.opt || 0;
-    const basedir = `${config.root}satellite${config.target}/`;
+	const basedir = `public/data/satellite${config.target}/`;
+
     let options;
 
     if (counter === 0) {
