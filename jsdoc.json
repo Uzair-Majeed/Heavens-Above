@@ -1,13 +1,11 @@
 {
   "source": {
     "include": ["src"],
-    "exclude": ["node_modules", "dist"],
-    "includePattern": ".+\\.js(doc|x)?$",
-    "excludePattern": "(^|\\/|\\\\)_"
+    "includePattern": ".js$"
   },
   "opts": {
     "destination": "./docs",
-    "recurse": true,
-    "template": "default"
+    "template": "./node_modules/jsdoc/templates/default",
+    "recurse": true
   }
 }
