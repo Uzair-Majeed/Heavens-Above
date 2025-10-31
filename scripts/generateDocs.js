@@ -1,6 +1,6 @@
 // scripts/generateDocs.js
-import fs from "fs";
-import path from "path";
+const fs = require("fs");
+const path = require("path");
 
 const SRC_DIR = "./src";
 const OUTPUT_DIR = "./docs/build";
