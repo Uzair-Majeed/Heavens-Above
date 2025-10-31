@@ -1,0 +1,39 @@
+# .github/workflows/ci.yml
+
+name: Continuous Integration
+
+# This workflow triggers on pushes and pull requests to the main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    # The job runs on the latest version of Ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the repository code
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Step 2: Set up the correct Node.js version
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18' # Specifies the Node.js version for compatibility
+        cache: 'npm'       # Caches npm dependencies to speed up future runs
+
+    # Step 3: Install all project dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # Step 4: Run the linter to check for code style issues
+    - name: Run linter
+      run: npm run lint
+
+    # Step 5: Run the unit tests to verify functionality
+    - name: Run tests
+      run: npm run test:unit

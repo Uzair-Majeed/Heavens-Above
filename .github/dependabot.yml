@@ -1,0 +1,8 @@
+# .github/dependabot.yml
+
+version: 2
+updates:
+  - package-ecosystem: "npm" # For Node.js dependencies
+    directory: "/" # Location of package files
+    schedule:
+      interval: "daily"
