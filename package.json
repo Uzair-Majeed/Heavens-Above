@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node run.js",
     "lint": "eslint .",
-    "build": "echo 'No build step defined'"
+    "build": "echo 'No build step defined'",
     "docs:build": "echo 'No documentation to build yet'"
   },
   "dependencies": {
