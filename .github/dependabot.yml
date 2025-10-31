@@ -1,11 +1,18 @@
+# .github/dependabot.yml
+
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/"  # root package.json
+    directory: "/"  # Root package.json
     schedule:
       interval: "daily"
+      time: "00:00"
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
       - "auto-generated"
-    # Optionally: allow/ignore rules here
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    reviewers:
+      - "Uzair-Majeed"

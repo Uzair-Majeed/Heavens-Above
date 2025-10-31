@@ -1,41 +1,39 @@
-name: CI - tests & lint
+name: Continuous Integration
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  setup-and-test:
+  build-and-test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20]
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          node-version: 22
 
       - name: Install dependencies
         run: npm install
 
-      - name: Lint
-        run: npm run lint
-        # If your project doesn't have lint script, replace with: npx eslint .
+      - name: Run lint (optional)
+        run: |
+          if npm run | grep -q "lint"; then
+            npm run lint
+          else
+            echo "No lint script found, skipping lint step."
+          fi
 
-      - name: Run tests
-        run: npm test -- --ci --reporter=jest-junit || true
-
-      - name: Upload test results (junit) and coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: |
-            ./junit.xml
-            ./coverage
+      - name: Run tests (optional)
+        run: |
+          if npm run | grep -q "test"; then
+            npm test
+          else
+            echo "No test script found, skipping tests."
+          fi

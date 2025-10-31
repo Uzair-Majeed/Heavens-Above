@@ -1,4 +1,4 @@
-name: Docs → GitHub Pages
+name: Docs — GitHub Pages
 
 on:
   push:
@@ -7,28 +7,28 @@ on:
       - '.github/workflows/documentation.yml'
     branches:
       - main
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build docs
-        run: npm run docs:build || echo "Replace with your docs build command"
+      - name: Build documentation
+        run: npm run docs:build
 
-      - name: Publish to GitHub Pages
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/build  # change to your docs output dir
+          publish_dir: ./docs/build

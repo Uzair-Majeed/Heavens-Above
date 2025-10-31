@@ -1,4 +1,4 @@
-name: Code Review — security & lint
+name: Code Review — Security & Lint
 
 on:
   pull_request:
@@ -8,25 +8,54 @@ on:
 
 jobs:
   eslint:
+    name: ESLint Code Quality Check
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - run: npm ci
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Run ESLint
         run: |
-          npm run lint || (echo "Lint failed"; exit 1)
+          if npm run | grep -q "lint"; then
+            echo "Running ESLint checks..."
+            npm run lint || (echo "Lint failed"; exit 1)
+          else
+            echo "No lint script found — skipping lint step."
+          fi
 
   codeql:
-    name: CodeQL Analysis
+    name: CodeQL Security Analysis
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript' ]
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
-          languages: javascript
+          languages: ${{ matrix.language }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
       - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3

@@ -1,3 +1,8 @@
+# .github/release-drafter.yml
+
+name-template: "v$NEXT_PATCH_VERSION"
+tag-template: "v$NEXT_PATCH_VERSION"
+
 template: |
   ## What's Changed
   $CHANGES
@@ -6,10 +11,29 @@ categories:
   - title: "Features"
     labels:
       - "feature"
+      - "enhancement"
+
   - title: "Bug Fixes"
     labels:
       - "bug"
+      - "fix"
+
   - title: "Maintenance"
     labels:
       - "chore"
-change-template: "- $TITLE #$NUMBER (@$AUTHOR)"
+      - "dependencies"
+      - "refactor"
+
+change-template: "- $TITLE (#$NUMBER) by @$AUTHOR"
+
+version-resolver:
+  major:
+    labels:
+      - "major"
+  minor:
+    labels:
+      - "minor"
+  patch:
+    labels:
+      - "patch"
+  default: patch
