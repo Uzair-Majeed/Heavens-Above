@@ -1,46 +1,32 @@
-# .github/workflows/code-review.yml
-
-name: Code Review
+name: Code Review — security & lint
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
 jobs:
-  lint-and-test:
+  eslint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+      - run: npm ci
+      - name: Run ESLint
+        run: |
+          npm run lint || (echo "Lint failed"; exit 1)
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run linter
-        run: npm run lint
-
-      - name: Run tests
-        run: npm run test:unit
-  
-  super-lint:
-    name: Super-Linter
+  codeql:
+    name: CodeQL Analysis
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
         with:
-          # Fetches the entire history for analysis
-          fetch-depth: 0
-      
-      - name: Run Super-Linter
-        uses: github/super-linter@v5
-        env:
-          VALIDATE_ALL_CODEBASE: false # Only lint new/changed files
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          languages: javascript
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v2

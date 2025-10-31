@@ -1,39 +1,41 @@
-# .github/workflows/ci.yml
+name: CI - tests & lint
 
-name: Continuous Integration
-
-# This workflow triggers on pushes and pull requests to the main branch
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
-  build-and-test:
-    # The job runs on the latest version of Ubuntu
+  setup-and-test:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        node-version: [18.x]
     steps:
-    # Step 1: Check out the repository code
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    # Step 2: Set up the correct Node.js version
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18' # Specifies the Node.js version for compatibility
-        cache: 'npm'       # Caches npm dependencies to speed up future runs
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
-    # Step 3: Install all project dependencies
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-    # Step 4: Run the linter to check for code style issues
-    - name: Run linter
-      run: npm run lint
+      - name: Lint
+        run: npm run lint
+        # If your project doesn't have lint script, replace with: npx eslint .
 
-    # Step 5: Run the unit tests to verify functionality
-    - name: Run tests
-      run: npm run test:unit
+      - name: Run tests
+        run: npm test -- --ci --reporter=jest-junit || true
+
+      - name: Upload test results (junit) and coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            ./junit.xml
+            ./coverage

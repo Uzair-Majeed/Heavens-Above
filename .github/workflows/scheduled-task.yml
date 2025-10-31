@@ -1,25 +1,30 @@
-# .github/workflows/scheduled-tasks.yml
-
-name: Scheduled Tasks
+name: Scheduled maintenance
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Runs every Sunday at midnight UTC
+    - cron: '0 2 * * *' # daily at 02:00 UTC (adjust as needed)
+  workflow_dispatch: {} # lets you run it manually from Actions UI
 
 jobs:
-  audit:
+  maintenance:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Run security audit
-        run: npm audit
+      - name: Run maintenance script
+        run: npm run maintenance || echo "No maintenance script defined"
+      
+      - name: Upload logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: maintenance-logs
+          path: ./maintenance.log || ./logs

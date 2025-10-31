@@ -1,8 +1,11 @@
-# .github/dependabot.yml
-
 version: 2
 updates:
-  - package-ecosystem: "npm" # For Node.js dependencies
-    directory: "/" # Location of package files
+  - package-ecosystem: "npm"
+    directory: "/"  # root package.json
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "auto-generated"
+    # Optionally: allow/ignore rules here

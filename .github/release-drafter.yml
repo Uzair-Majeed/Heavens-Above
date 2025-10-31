@@ -1,0 +1,15 @@
+template: |
+  ## What's Changed
+  $CHANGES
+
+categories:
+  - title: "Features"
+    labels:
+      - "feature"
+  - title: "Bug Fixes"
+    labels:
+      - "bug"
+  - title: "Maintenance"
+    labels:
+      - "chore"
+change-template: "- $TITLE #$NUMBER (@$AUTHOR)"
